@@ -14,6 +14,10 @@ class LoggerUtils():
         self.LOG_STDOUT_LEVEL = os.getenv('COMMON_PY_STDOUT_LOG_LEVEL', 'WARN')
         self.LOG_DEFAULT_LEVEL = os.getenv('COMMON_PY_DEFAULT_LOG_LEVEL', 'WARN')
         self.LOG_FILE_ENABLED = os.getenv('COMMON_PY_ENABLE_LOG_FILE', '0')
+        handlers = []
+        handlers.append('stdout_handler')
+        if self.LOG_FILE_ENABLED == '1':
+            handlers.append('file_handler')
         if os.path.join(self.LOG_FILE_PATH):
             if not os.path.exists(os.path.join(self.LOG_FILE_PATH)):
                 os.makedirs(os.path.join(self.LOG_FILE_PATH))
@@ -44,7 +48,7 @@ class LoggerUtils():
             },
             'loggers': {
                 '': {
-                    'handlers': ['stdout_handler', 'file_handler' if self.LOG_FILE_ENABLED == '1' else None ],
+                    'handlers': handlers,
                     'level': self.LOG_DEFAULT_LEVEL,
                     'propagate': False
                 }
