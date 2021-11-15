@@ -44,7 +44,7 @@ class LoggerUtils():
             },
             'loggers': {
                 '': {
-                    'handlers': ['stdout_handler', 'file_handler' if self.LOG_FILE_ENABLED == '1' else '' ],
+                    'handlers': ['stdout_handler', 'file_handler' if self.LOG_FILE_ENABLED == '1' else None ],
                     'level': self.LOG_DEFAULT_LEVEL,
                     'propagate': False
                 }
