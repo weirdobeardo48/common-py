@@ -18,9 +18,9 @@ class LoggerUtils():
         handlers.append('stdout_handler')
         if self.LOG_FILE_ENABLED == '1':
             handlers.append('file_handler')
-        if os.path.join(self.LOG_FILE_PATH):
-            if not os.path.exists(os.path.join(self.LOG_FILE_PATH)):
-                os.makedirs(os.path.join(self.LOG_FILE_PATH))
+            if os.path.join(self.LOG_FILE_PATH):
+                if not os.path.exists(os.path.join(self.LOG_FILE_PATH)):
+                    os.makedirs(os.path.join(self.LOG_FILE_PATH))
         logging_config = {
             'version': 1,
             'disable_existing_loggers': False,
