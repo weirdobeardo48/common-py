@@ -46,6 +46,7 @@ class Consumer():
                     for partition in assigned:
                         key = f'{KAFKA_CONSUMER_SUBSCRIBE_TOPIC}_{partition.partition}_offset'
                         value = self.__redis.get(key)
+                        LOG.info(f'Redis: Return value of key {key} is {value}')
                         if value:
                             LOG.warning(
                                 f'Seeking offset of topic {partition.topic} partition {partition.partition} to offset {value}')
