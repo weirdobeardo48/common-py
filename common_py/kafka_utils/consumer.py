@@ -13,7 +13,7 @@ LOG = logging.getLogger(__name__)
 class Consumer():
     def __new__(cls, **kwargs) -> KafkaConsumer:
         KAFKA_BOOTSTRAP_SERVERS = kwargs.get('bootstrap_servers', None)
-        KAFKA_CONSUMER_SUBSCRIBE_TOPIC = kwargs('topics', None)
+        KAFKA_CONSUMER_SUBSCRIBE_TOPIC = kwargs.get('topics', None)
         CLIENT_ID = kwargs.get('client_id', None)
         GROUP_ID = kwargs.get('group_id', None)
         AUTO_COMMIT = kwargs.get('auto_commit', False)
