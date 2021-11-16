@@ -35,11 +35,16 @@ class Consumer():
             'rebalance_listener', None)
 
         class RedisSeekOffsetHandler(ConsumerRebalanceListener):
+            __redis = None
+
+            def __init__(self, __redis):
+                self.__redis = __redis
+
             def on_partitions_assigned(self, assigned):
-                if __redis:
+                if self.__redis:
                     for partition in assigned:
                         key = f'{KAFKA_CONSUMER_SUBSCRIBE_TOPIC}_{partition.partition}_offset'
-                        value = __redis.get(key)
+                        value = self.__redis.get(key)
                         if value:
                             LOG.warning(
                                 f'Seeking offset of topic {partition.topic} partition {partition.partition} to offset {value}')
@@ -50,28 +55,33 @@ class Consumer():
                 return super().on_partitions_revoked(revoked)
 
         class RebalanceHandler(ConsumerRebalanceListener):
+            def __init__(self, **k):
+                self.__redis = k.get('redis', None)
+
             def on_partitions_revoked(self, revoked):
                 for part in revoked:
                     LOG.warning(f'{part} is being revoked')
-                RedisSeekOffsetHandler().on_partitions_revoked(revoked)
+                RedisSeekOffsetHandler(__redis=self.__redis).on_partitions_revoked(revoked)
                 if CustomRebalanceHandler:
                     CustomRebalanceHandler().on_partitions_revoked(revoked)
 
             def on_partitions_assigned(self, assigned):
                 for part in assigned:
                     LOG.warning(f'{part} is being assigned')
-                RedisSeekOffsetHandler().on_partitions_assigned(assigned)
+                RedisSeekOffsetHandler(__redis=self.__redis).on_partitions_assigned(assigned)
                 if CustomRebalanceHandler:
                     CustomRebalanceHandler().on_partitions_assigned(assigned)
 
         consumer.subscribe(
-            topics=(KAFKA_CONSUMER_SUBSCRIBE_TOPIC,), listener=RebalanceHandler())
+            topics=KAFKA_CONSUMER_SUBSCRIBE_TOPIC, listener=RebalanceHandler())
 
         while len(consumer.assignment()) == 0:
             LOG.info(
                 f'Polling topic {KAFKA_CONSUMER_SUBSCRIBE_TOPIC} at {KAFKA_BOOTSTRAP_SERVERS}')
             consumer.poll()
             time.sleep(2)
+
+        return consumer
 
     def __init__(self, **kwargs) -> None:
         pass
