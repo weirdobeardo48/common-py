@@ -35,12 +35,13 @@ class Consumer():
             'rebalance_listener', None)
 
         class RedisSeekOffsetHandler(ConsumerRebalanceListener):
-            __redis = None
+            __redis: redis.Redis = None
 
             def __init__(self, **k):
                 self.__redis = k.get('redis', None)
 
             def on_partitions_assigned(self, assigned):
+                LOG.warning("Seeking redis to its offset")
                 if self.__redis:
                     for partition in assigned:
                         key = f'{KAFKA_CONSUMER_SUBSCRIBE_TOPIC}_{partition.partition}_offset'
