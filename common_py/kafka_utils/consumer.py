@@ -50,7 +50,7 @@ class Consumer():
                         if value:
                             LOG.warning(
                                 f'Seeking offset of topic {partition.topic} partition {partition.partition} to offset {value}')
-                            consumer.seek(partition, value)
+                            consumer.seek(partition, int(value.decode()))
                         pass
 
             def on_partitions_revoked(self, revoked):
