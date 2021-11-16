@@ -37,8 +37,8 @@ class Consumer():
         class RedisSeekOffsetHandler(ConsumerRebalanceListener):
             __redis = None
 
-            def __init__(self, __redis):
-                self.__redis = __redis
+            def __init__(self, **k):
+                self.__redis = k.get('redis', None)
 
             def on_partitions_assigned(self, assigned):
                 if self.__redis:
@@ -61,14 +61,14 @@ class Consumer():
             def on_partitions_revoked(self, revoked):
                 for part in revoked:
                     LOG.warning(f'{part} is being revoked')
-                RedisSeekOffsetHandler(__redis=self.__redis).on_partitions_revoked(revoked)
+                RedisSeekOffsetHandler(redis=self.__redis).on_partitions_revoked(revoked)
                 if CustomRebalanceHandler:
                     CustomRebalanceHandler().on_partitions_revoked(revoked)
 
             def on_partitions_assigned(self, assigned):
                 for part in assigned:
                     LOG.warning(f'{part} is being assigned')
-                RedisSeekOffsetHandler(__redis=self.__redis).on_partitions_assigned(assigned)
+                RedisSeekOffsetHandler(redis=self.__redis).on_partitions_assigned(assigned)
                 if CustomRebalanceHandler:
                     CustomRebalanceHandler().on_partitions_assigned(assigned)
 
