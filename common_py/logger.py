@@ -3,7 +3,7 @@ import logging
 import logging.config
 
 
-class LoggerUtils():
+class LoggerUtils:
     def __init__(self) -> None:
         self.init_log()
 
