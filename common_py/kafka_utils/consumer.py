@@ -75,7 +75,7 @@ class Consumer():
                     CustomRebalanceHandler().on_partitions_assigned(assigned)
 
         consumer.subscribe(
-            topics=KAFKA_CONSUMER_SUBSCRIBE_TOPIC, listener=RebalanceHandler())
+            topics=KAFKA_CONSUMER_SUBSCRIBE_TOPIC, listener=RebalanceHandler(redis=__redis))
 
         while len(consumer.assignment()) == 0:
             LOG.info(
