@@ -1,0 +1,8 @@
+autopep8==1.6.0
+common-py==1.0.0
+Deprecated==1.2.13
+kafka-python==2.0.2
+pycodestyle==2.8.0
+redis==4.0.0
+toml==0.10.2
+wrapt==1.13.3
